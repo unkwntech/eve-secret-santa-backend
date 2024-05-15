@@ -10,11 +10,12 @@ export default class Event implements Identifiable, Auditable {
     public EventName: string;
     public SignupStartDate: Date;
     public SignupEndDate: Date;
-    public DeliveryDeadline?: Date;
+    public DeliveryDeadline: Date;
     public Participants: number[] = [];
     public Assignments: number[][] = [];
 
     public updates: RecordUpdates[] = [];
+    public isDeleted: boolean = false;
 
     public constructor(input: any) {
         if(!input._id) throw new Error("Event requires an _id");
@@ -37,11 +38,17 @@ export default class Event implements Identifiable, Auditable {
 
         this.Participants = input.Participants;
         this.updates = input.updates;
+        this.isDeleted = input.isDeleted;
     }
 
-    static make(createdBy: string, actorIP: string): Event {
+    static make(EventName: string, SignupStartDate: Date, SignupEndDate: Date, DeliveryDeadline: Date, createdBy: string, actorIP: string, ): Event {
         return new Event({
             _id: Utilities.newGuid(),
+            OwnerID: createdBy,
+            EventName,
+            SignupStartDate,
+            SignupEndDate,
+            DeliveryDeadline,
             deleted: false,
             updates: [
                 new RecordUpdates({
@@ -71,6 +78,6 @@ export default class Event implements Identifiable, Auditable {
     }
 
     static getUrl(ID?: string): string {
-        return "/event" + (ID ? `/${ID}` : "");
+        return "/events" + (ID ? `/${ID}` : "");
     }
 }
