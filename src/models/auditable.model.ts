@@ -1,5 +1,6 @@
 export interface Auditable {
     updates: RecordUpdates[];
+    isDeleted: boolean;
 }
 
 export class RecordUpdates {
