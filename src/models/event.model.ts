@@ -1,0 +1,76 @@
+import { ObjectId } from "mongodb";
+import { Factory } from "./factory.model";
+import { Identifiable } from "./identifiable.model";
+import { Utilities } from "../utilities/utilities";
+import { Auditable, RecordUpdates } from "./auditable.model";
+
+export default class Event implements Identifiable, Auditable {
+    public _id: ObjectId;
+    public OwnerID: number;
+    public EventName: string;
+    public SignupStartDate: Date;
+    public SignupEndDate: Date;
+    public DeliveryDeadline?: Date;
+    public Participants: number[] = [];
+    public Assignments: number[][] = [];
+
+    public updates: RecordUpdates[] = [];
+
+    public constructor(input: any) {
+        if(!input._id) throw new Error("Event requires an _id");
+        else this._id = input._id;
+
+        if(!input.OwnerID) throw new Error("Event requires a OwnerID")
+        else this.OwnerID = input.OwnerID;
+
+        if(!input.EventName) throw new Error("Event requires a EventName")
+        else this.EventName = input.EventName;
+
+        if(!input.SignupStartDate) throw new Error("Event requires a SignupStartDate")
+        else this.SignupStartDate = input.SignupStartDate;
+
+        if(!input.SignupEndDate) throw new Error("Event requires a SignupEndDate")
+        else this.SignupEndDate = input.SignupEndDate;
+
+        if(!input.DeliveryDeadline) throw new Error("Event requires a DeliveryDeadline")
+        else this.DeliveryDeadline = input.DeliveryDeadline;
+
+        this.Participants = input.Participants;
+        this.updates = input.updates;
+    }
+
+    static make(createdBy: string, actorIP: string): Event {
+        return new Event({
+            _id: Utilities.newGuid(),
+            deleted: false,
+            updates: [
+                new RecordUpdates({
+                    timestamp: new Date(),
+                    actor: createdBy,
+                    sourceIP: actorIP,
+                    action: "CREATE Event",
+                }),
+            ],
+        });
+    }
+
+    static getFactory(): Factory<Event> {
+        return new (class implements Factory<Event> {
+            make(json: any): Event {
+                return new Event(json);
+            }
+
+            getCollectionName(): string {
+                return "Event";
+            }
+
+            getUrl(id?: string): string {
+                return Event.getUrl();
+            }
+        })();
+    }
+
+    static getUrl(ID?: string): string {
+        return "/event" + (ID ? `/${ID}` : "");
+    }
+}
