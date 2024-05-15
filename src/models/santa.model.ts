@@ -14,6 +14,7 @@ export default class Santa implements Identifiable, Auditable {
     public AllianceName?: string;
 
     public updates: RecordUpdates[];
+    public isDeleted: boolean = false;
 
     public constructor(input: any) {
         if(!input._id) throw new Error("Santa requires an _id");
@@ -35,6 +36,8 @@ export default class Santa implements Identifiable, Auditable {
 
         if(input.AllianceName) this.AllianceName = input.AllianceName;
 
+        this.isDeleted = input.isDeleted;
+
         if(!input.updates) {
             this.updates = [];
         } else {
@@ -43,9 +46,15 @@ export default class Santa implements Identifiable, Auditable {
 
     }
 
-    static make(createdBy: string, actorIP: string): Santa {
+    static make(CharacterID: number, CharacterName: string, CorporationID: number, CorporationName: string, createdBy: string, actorIP: string, AllianceID?: number, AllianceName?: string): Santa {
         return new Santa({
             _id: Utilities.newGuid(),
+            CharacterID,
+            CharacterName,
+            CorporationID,
+            CorporationName,
+            AllianceID,
+            AllianceName,
             deleted: false,
             updates: [
                 new RecordUpdates({
