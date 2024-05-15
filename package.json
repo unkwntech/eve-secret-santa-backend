@@ -1,0 +1,23 @@
+{
+    "name": "eve-secret-santa-backend",
+    "version": "1.0.0",
+    "dependencies": {
+        "axios": "^1.6.8",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.0",
+        "express": "^4.17.3",
+        "https": "^1.0.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongodb": "^4.4.1",
+        "swagger-ui-express": "^5.0.0",
+        "ts-node": "^10.7.0",
+        "tsconfig-paths": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.13",
+        "@types/jsonwebtoken": "^9.0.6",
+        "@types/node": "^17.0.45",
+        "@types/swagger-ui-express": "^4.1.6",
+        "typescript": "^4.6.3"
+    }
+}
