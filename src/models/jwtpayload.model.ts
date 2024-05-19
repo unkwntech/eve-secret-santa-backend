@@ -7,9 +7,9 @@ export class JWTPayload {
     //subject
     public sub: string;
     //expiration
-    public exp: Date;
+    public exp: number;
     //issued at
-    public iat: Date;
+    public iat: number;
 
     //Private Claims
 
@@ -24,14 +24,14 @@ export class JWTPayload {
     public static make(
         subject: string,
         audience: string,
-        expiration: number = 60
+        expiration: number
     ): JWTPayload {
         return new JWTPayload({
-            iat: new Date().getTime(),
+            iat: Math.floor(Date.now() / 1000),
             iss: process.env.JWT_ISSUER,
             sub: subject,
             aud: audience,
-            exp: new Date().getTime() + expiration * 60 * 1000 * 1000,
+            exp: Math.floor(expiration),
         });
     }
 
