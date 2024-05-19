@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
-import { Factory } from "./factory.model";
-import { Identifiable } from "./identifiable.model";
 import { Utilities } from "../utilities/utilities";
 import { Auditable, RecordUpdates } from "./auditable.model";
+import { Factory } from "./factory.model";
+import { Identifiable } from "./identifiable.model";
 
 export default class Santa implements Identifiable, Auditable {
     public _id: ObjectId;
@@ -13,40 +13,59 @@ export default class Santa implements Identifiable, Auditable {
     public AllianceID?: number;
     public AllianceName?: string;
 
+    public CSPACharges: number = 0.0;
+    public CSPACredit: number = 0.0;
+
+    public Donations: number = 0.0;
+
     public updates: RecordUpdates[];
     public isDeleted: boolean = false;
 
     public constructor(input: any) {
-        if(!input._id) throw new Error("Santa requires an _id");
+        if (!input._id) throw new Error("Santa requires an _id");
         else this._id = input._id;
 
-        if(!input.CharacterID) throw new Error("Santa requires a CharacterID")
+        if (!input.CharacterID) throw new Error("Santa requires a CharacterID");
         else this.CharacterID = input.CharacterID;
 
-        if(!input.CharacterName) throw new Error("Santa requires a CharacterName")
+        if (!input.CharacterName)
+            throw new Error("Santa requires a CharacterName");
         else this.CharacterName = input.CharacterName;
 
-        if(!input.CorporationID) throw new Error("Santa requires a CorporationID")
+        if (!input.CorporationID)
+            throw new Error("Santa requires a CorporationID");
         else this.CorporationID = input.CorporationID;
 
-        if(!input.CorporationName) throw new Error("Santa requires a CorporationName")
+        if (!input.CorporationName)
+            throw new Error("Santa requires a CorporationName");
         else this.CorporationName = input.CorporationName;
 
-        if(input.AllianceID) this.AllianceID = input.AllianceID;
+        if (input.AllianceID) this.AllianceID = input.AllianceID;
 
-        if(input.AllianceName) this.AllianceName = input.AllianceName;
+        if (input.AllianceName) this.AllianceName = input.AllianceName;
 
         this.isDeleted = input.isDeleted;
+        this.CSPACharges = input.CSPACharges;
+        this.CSPACredit = input.CSPACredit;
+        this.Donations = input.Donations;
 
-        if(!input.updates) {
+        if (!input.updates) {
             this.updates = [];
         } else {
             this.updates = input.updates;
         }
-
     }
 
-    static make(CharacterID: number, CharacterName: string, CorporationID: number, CorporationName: string, createdBy: string, actorIP: string, AllianceID?: number, AllianceName?: string): Santa {
+    static make(
+        CharacterID: number,
+        CharacterName: string,
+        CorporationID: number,
+        CorporationName: string,
+        createdBy: string,
+        actorIP: string,
+        AllianceID?: number,
+        AllianceName?: string
+    ): Santa {
         return new Santa({
             _id: Utilities.newGuid(),
             CharacterID,
