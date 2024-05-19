@@ -1,6 +1,6 @@
-import { Factory } from "@models/factory";
-import { Identifiable } from "@models/identifiable";
 import { Document, MongoClient } from "mongodb";
+import { Factory } from "../models/factory.model";
+import { Identifiable } from "../models/identifiable.model";
 import { ObjectNotFoundError } from "./errors";
 
 require("dotenv").config();

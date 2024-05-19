@@ -15,5 +15,7 @@ namespace NodeJS {
         SWAG_VERSION: string;
         SWAG_HOST: string;
         SWAG_BASE_PATH: string;
+        EVE_CLIENT_ID: string;
+        EVE_SECRET: string;
     }
 }
