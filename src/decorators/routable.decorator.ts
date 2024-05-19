@@ -17,7 +17,7 @@ export const swaggerDeff: swagger = {
     },
     host: process.env.SWAG_HOST,
     basePath: process.env.SWAG_BASE_PATH,
-    schemes: ["http", "https"],
+    schemes: ["https"],
     consumes: ["application/json"],
     produces: ["application/json"],
     paths: {},
@@ -67,10 +67,9 @@ function routable(options: IOptions) {
             console.info(
                 `Setting up endpoint ${options.method.toUpperCase()}  \t/api${
                     options.path
-                }`
+                }\t\t${!options.swagger ? "UNDOCUMENTED" : ""}`
             );
         }
-
         const origFunc = descriptor.value;
 
         //Add swagger doc to the swagger object
@@ -80,7 +79,8 @@ function routable(options: IOptions) {
         let tags = [
             ...(target.constructor.swaggerTags ?? []),
             ...(options.swagger?.tags ?? []),
-        ];
+        ].map((tag) => tag.toUpperCase());
+
         if (options.swagger) {
             //use provided swagger information
             swaggerDeff.paths[swaggerPath] = {
@@ -88,6 +88,7 @@ function routable(options: IOptions) {
                     ...options.swagger,
                     tags,
                 } as swaggerMethod,
+                ...swaggerDeff.paths[swaggerPath],
             } as swaggerPath;
         } else {
             //tag the endpoint as undocumented if swagger info hasn't been defined
