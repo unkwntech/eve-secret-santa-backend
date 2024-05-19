@@ -8,6 +8,10 @@ export default class SantasController {
     @routable({
         path: "/santas/:id",
         method: "get",
+        swagger: {
+            tags: ["santas"],
+            summary: "Get a specific Santa.",
+        },
     })
     public GetSanta(req: Request, res: Response, jwt: JWTPayload) {
         //todo permissions & fields
@@ -22,7 +26,7 @@ export default class SantasController {
             Santa.getFactory()
         )
             .then((data: Santa[]) => {
-                res.sendStatus(200).send(JSON.stringify(data[0]));
+                res.status(200).send(JSON.stringify(data[0]));
             })
             .catch((error) => {
                 console.error(error);
@@ -33,6 +37,10 @@ export default class SantasController {
     @routable({
         path: "/santas",
         method: "get",
+        swagger: {
+            tags: ["santas"],
+            summary: "Get a list of all visible santas.",
+        },
     })
     public GetSantas(req: Request, res: Response, jwt: JWTPayload) {
         //todo permissions & fields
@@ -46,7 +54,7 @@ export default class SantasController {
             Santa.getFactory()
         )
             .then((data: Santa[]) => {
-                res.sendStatus(200).send(JSON.stringify(data));
+                res.status(200).send(JSON.stringify(data));
             })
             .catch((error) => {
                 console.error(error);
@@ -57,8 +65,15 @@ export default class SantasController {
     @routable({
         path: "/santas",
         method: "post",
+        swagger: {
+            tags: ["santas"],
+            summary: "Update a santa.",
+        },
     })
     public CreateSanta(req: Request, res: Response, jwt: JWTPayload) {
+        //Posting new santas is no permitted.
+        res.sendStatus(405);
+        return;
         let santa = Santa.make(
             parseInt(req.params.CharacterID),
             req.params.CharacterName,
@@ -82,6 +97,10 @@ export default class SantasController {
     @routable({
         path: "/santas/:id",
         method: "put",
+        swagger: {
+            tags: ["santas"],
+            summary: "Update a santa.",
+        },
     })
     public UpdateSanta(req: Request, res: Response, jwt: JWTPayload) {
         DB.Query(
@@ -108,8 +127,14 @@ export default class SantasController {
     @routable({
         path: "/santas/:id",
         method: "delete",
+        swagger: {
+            tags: ["santas"],
+            summary: "Delete a santa.",
+        },
     })
     public DeleteSanta(req: Request, res: Response, jwt: JWTPayload) {
+        res.sendStatus(405);
+        return;
         DB.Query(
             {
                 $and: {
