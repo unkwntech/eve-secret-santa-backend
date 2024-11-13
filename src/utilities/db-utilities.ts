@@ -125,7 +125,7 @@ export class DbUtilities {
         factory: Factory<T>,
         projection?: any,
         limit: number = parseInt(process.env.DEFAULT_QUERY_LIMIT),
-        page: number = 1
+        page: number = 0
     ): Promise<T[]> {
         const dbClient = new MongoClient(`${process.env.DB_CONN_STRING}`);
         try {
