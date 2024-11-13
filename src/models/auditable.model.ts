@@ -14,7 +14,8 @@ export class RecordUpdates {
             throw new Error("timestamp is required for RecordUpdates");
         else this.timestamp = json.timestamp;
 
-        if (!json.actor) throw new Error("actor is required for RecordUpdates");
+        if (json.actor == undefined)
+            throw new Error("actor is required for RecordUpdates");
         else this.actor = json.actor;
 
         if (!json.sourceIP)
