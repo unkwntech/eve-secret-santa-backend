@@ -1,55 +1,79 @@
 import { ObjectId } from "mongodb";
-import { Factory } from "./factory.model";
-import { Identifiable } from "./identifiable.model";
 import { Utilities } from "../utilities/utilities";
 import { Auditable, RecordUpdates } from "./auditable.model";
+import { Factory } from "./factory.model";
+import { Identifiable } from "./identifiable.model";
 
 export default class Event implements Identifiable, Auditable {
     public _id: ObjectId;
+    public id: string;
     public OwnerID: number;
     public EventName: string;
     public SignupStartDate: Date;
     public SignupEndDate: Date;
     public DeliveryDeadline: Date;
-    public Participants: number[] = [];
-    public Assignments: number[][] = [];
+    public Participants: string[] = [];
+    public Assignments: { santa: string; recip: string }[] = [];
+
+    public isPublished: boolean = false;
+    public isOpen: boolean;
 
     public updates: RecordUpdates[] = [];
     public isDeleted: boolean = false;
 
     public constructor(input: any) {
-        if(!input._id) throw new Error("Event requires an _id");
+        if (!input._id) throw new Error("Event requires an _id");
         else this._id = input._id;
 
-        if(!input.OwnerID) throw new Error("Event requires a OwnerID")
+        if (!input.id && !input._id)
+            throw new Error("Event requires an id or _id");
+        else this.id = input.id || this._id;
+
+        if (!input.OwnerID) throw new Error("Event requires a OwnerID");
         else this.OwnerID = input.OwnerID;
 
-        if(!input.EventName) throw new Error("Event requires a EventName")
+        if (!input.EventName) throw new Error("Event requires a EventName");
         else this.EventName = input.EventName;
 
-        if(!input.SignupStartDate) throw new Error("Event requires a SignupStartDate")
+        if (!input.SignupStartDate)
+            throw new Error("Event requires a SignupStartDate");
         else this.SignupStartDate = input.SignupStartDate;
 
-        if(!input.SignupEndDate) throw new Error("Event requires a SignupEndDate")
+        if (!input.SignupEndDate)
+            throw new Error("Event requires a SignupEndDate");
         else this.SignupEndDate = input.SignupEndDate;
 
-        if(!input.DeliveryDeadline) throw new Error("Event requires a DeliveryDeadline")
+        if (!input.DeliveryDeadline)
+            throw new Error("Event requires a DeliveryDeadline");
         else this.DeliveryDeadline = input.DeliveryDeadline;
 
-        this.Participants = input.Participants;
+        if (input.isOpen === undefined) this.isOpen = false;
+        else this.isOpen = input.isOpen;
+
+        this.Participants = input.Participants ?? [];
         this.updates = input.updates;
         this.isDeleted = input.isDeleted;
+        this.isPublished = input.isPublished ?? false;
     }
 
-    static make(EventName: string, SignupStartDate: Date, SignupEndDate: Date, DeliveryDeadline: Date, createdBy: string, actorIP: string, ): Event {
+    static make(
+        EventName: string,
+        SignupStartDate: Date,
+        SignupEndDate: Date,
+        DeliveryDeadline: Date,
+        createdBy: string,
+        actorIP: string
+    ): Event {
+        let newGUID = Utilities.newGuid();
         return new Event({
-            _id: Utilities.newGuid(),
+            _id: newGUID,
+            id: newGUID,
             OwnerID: createdBy,
             EventName,
             SignupStartDate,
             SignupEndDate,
             DeliveryDeadline,
-            deleted: false,
+            isDeleted: false,
             updates: [
                 new RecordUpdates({
                     timestamp: new Date(),
