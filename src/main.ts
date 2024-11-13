@@ -22,6 +22,12 @@ app.use(
     })
 );
 
+//Set headers for all responses
+app.use(function (req, res, next) {
+    res.setHeader("Access-Control-Expose-Headers", "*");
+    next();
+});
+
 app.use(appRouter);
 
 //Add swagger to express
