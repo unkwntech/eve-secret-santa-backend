@@ -117,9 +117,9 @@ export default class OAuthController {
 
         //const santa = Santa.make(affiliations.character_id, )
 
-        const jwt = Jwt.sign(payload, process.env.JWT_SECRET);
+        const newJWT = Jwt.sign(payload, process.env.JWT_SECRET);
 
-        res.status(200).send(jwt);
+        res.status(200).send(newJWT);
         // axios
         //     .post(
         //         `https://esi.evetech.net/latest/characters/1978535095/cspa/`,
