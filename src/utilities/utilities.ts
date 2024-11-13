@@ -24,7 +24,9 @@ export class Utilities {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    static arrayShuffle(array: any[]) {
+    static arrayShuffle(input: any[]) {
+        let array: any[] = [];
+        Object.assign(array, input);
         let currentIndex = array.length;
 
         // While there remain elements to shuffle...
