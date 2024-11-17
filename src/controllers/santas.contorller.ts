@@ -12,6 +12,7 @@ export default class SantasController {
             tags: ["santas"],
             summary: "Get a specific Santa.",
         },
+        auth: true,
     })
     public GetSanta(req: Request, res: Response, jwt: JWTPayload) {
         //todo permissions & fields
@@ -41,6 +42,7 @@ export default class SantasController {
             tags: ["santas"],
             summary: "Get a list of all visible santas.",
         },
+        auth: true,
     })
     public GetSantas(req: Request, res: Response, jwt: JWTPayload) {
         //todo permissions & fields
