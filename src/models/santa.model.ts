@@ -74,7 +74,7 @@ export default class Santa implements Identifiable, Auditable {
             CorporationName,
             AllianceID,
             AllianceName,
-            deleted: false,
+            isDeleted: false,
             updates: [
                 new RecordUpdates({
                     timestamp: new Date(),
