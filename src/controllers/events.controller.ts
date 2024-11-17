@@ -39,11 +39,11 @@ export default class EventsController {
                     { isDeleted: false },
                     {
                         $or: [
-                            { OwnerID: jwt.sub },
+                            { OwnerID: jwt.sub.toString() },
                             {
                                 $and: [
                                     { isPublished: true },
-                                    { Participants: [jwt.sub] },
+                                    { Participants: [jwt.sub.toString()] },
                                 ],
                             },
                         ],
@@ -80,12 +80,26 @@ export default class EventsController {
         auth: true,
     })
     public GetEvents(req: Request, res: Response, jwt: JWTPayload) {
+        let foo = {
+            $and: [
+                { isDeleted: false },
+                {
+                    $or: [
+                        { OwnerID: 1978535095 },
+                        { Participants: [1978535095] },
+                    ],
+                },
+            ],
+        };
         //todo permissions & fields
         let query = {
             $and: [
                 { isDeleted: false },
                 {
-                    $or: [{ OwnerID: jwt.sub }, { Participants: [jwt.sub] }],
+                    $or: [
+                        { OwnerID: jwt.sub.toString() },
+                        { Participants: [jwt.sub.toString()] },
+                    ],
                 },
             ],
         };
@@ -314,5 +328,31 @@ export default class EventsController {
                 console.error(error);
                 res.sendStatus(500);
             });
+    }
+
+    @routable({
+        path: "/events/:id/recipient",
+        method: "get",
+        swagger: {
+            tags: ["events"],
+            summary:
+                "Get the users recipient for the given event ID.  Returns 204 if recipient hasn't been assigned, 200 with recipient information otherwise.",
+        },
+        auth: true,
+    })
+    public GetRecipient(req: Request, res: Response, jwt: JWTPayload) {
+        DB.ProjectedQuery(
+            { $and: [{ id: req.params.id }, { isDeleted: false }] },
+            { Assignments: 1 },
+            Event.getFactory()
+        ).then((result: any) => {
+            for (let res of result.Assignments) {
+                if (res.santa === jwt.sub) {
+                    res.status(200).send(res.recip);
+                    return;
+                }
+            }
+            res.status(204).send("No Assignment");
+        });
     }
 }
