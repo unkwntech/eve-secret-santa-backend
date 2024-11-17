@@ -152,17 +152,17 @@ export class DbUtilities {
         }
     }
 
-    static async ProjectedQuery(
+    static async ProjectedQuery<T>(
         query: any,
-        collectionName: string,
-        projection: any
+        projection: any,
+        factory: Factory<T>
     ): Promise<any[]> {
         const dbClient = new MongoClient(`${process.env.DB_CONN_STRING}`);
         try {
             await dbClient.connect();
 
             const database = dbClient.db(process.env.DB_NAME);
-            const collection = database.collection(collectionName);
+            const collection = database.collection(factory.getCollectionName());
             const cursor = collection.find(query, { projection: projection });
             let list: any[] = [];
             await cursor.forEach((d) => {
