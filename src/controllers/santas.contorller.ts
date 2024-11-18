@@ -18,16 +18,19 @@ export default class SantasController {
         //todo permissions & fields
         DB.Query(
             {
-                $and: {
-                    _id: req.params.id,
-                    isDeleted: false,
-                    $or: { OwnerID: jwt.sub, participants: [jwt.sub] },
-                },
+                $and: [
+                    { CharacterID: parseInt(req.params.id) },
+                    { isDeleted: false },
+                ],
             },
             Santa.getFactory()
         )
             .then((data: Santa[]) => {
-                res.status(200).send(JSON.stringify(data[0]));
+                res.setHeader("Content-Range", `${data.length}/${data.length}`)
+                    .status(200)
+                    .send(
+                        JSON.stringify({ id: data[0].CharacterID, ...data[0] })
+                    );
             })
             .catch((error) => {
                 console.error(error);
@@ -48,15 +51,22 @@ export default class SantasController {
         //todo permissions & fields
         DB.Query(
             {
-                $and: {
-                    isDeleted: false,
-                    $or: { ownerID: jwt.sub, participants: [jwt.sub] },
-                },
+                $and: [
+                    { isDeleted: false },
+                    {
+                        $or: [
+                            { ownerID: jwt.sub },
+                            { participants: [jwt.sub] },
+                        ],
+                    },
+                ],
             },
             Santa.getFactory()
         )
             .then((data: Santa[]) => {
-                res.status(200).send(JSON.stringify(data));
+                res.setHeader("Content-Range", `${data.length}/${data.length}`)
+                    .status(200)
+                    .send(JSON.stringify(data));
             })
             .catch((error) => {
                 console.error(error);
