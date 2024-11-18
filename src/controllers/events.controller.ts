@@ -84,10 +84,7 @@ export default class EventsController {
             $and: [
                 { isDeleted: false },
                 {
-                    $or: [
-                        { OwnerID: 1978535095 },
-                        { Participants: [1978535095] },
-                    ],
+                    $or: [{ OwnerID: jwt.sub }, { Participants: [jwt.sub] }],
                 },
             ],
         };
