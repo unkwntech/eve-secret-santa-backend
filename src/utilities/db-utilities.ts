@@ -13,7 +13,7 @@ export class DbUtilities {
             await dbClient.connect();
 
             const database = dbClient.db(process.env.DB_NAME);
-            const collection = database.collection(factory.getCollectionName());
+            const collection = database.collection(factory.CollectionName);
 
             const result = await collection.insertOne(o);
 
@@ -33,7 +33,7 @@ export class DbUtilities {
             await dbClient.connect();
 
             const database = dbClient.db(process.env.DB_NAME);
-            const collection = database.collection(factory.getCollectionName());
+            const collection = database.collection(factory.CollectionName);
 
             const query = { _id: _id };
             const data = await collection.findOne<T>(query);
@@ -61,7 +61,7 @@ export class DbUtilities {
             await dbClient.connect();
 
             const database = dbClient.db(process.env.DB_NAME);
-            const collection = database.collection(factory.getCollectionName());
+            const collection = database.collection(factory.CollectionName);
 
             const result = await collection.replaceOne(query, o);
 
@@ -83,7 +83,7 @@ export class DbUtilities {
             await dbClient.connect();
 
             const database = dbClient.db(process.env.DB_NAME);
-            const collection = database.collection(factory.getCollectionName());
+            const collection = database.collection(factory.CollectionName);
 
             const result = await collection.replaceOne(query, o, {
                 upsert: true,
@@ -106,7 +106,7 @@ export class DbUtilities {
             await dbClient.connect();
 
             const database = dbClient.db(process.env.DB_NAME);
-            const collection = database.collection(factory.getCollectionName());
+            const collection = database.collection(factory.CollectionName);
 
             const query = { _id: _id };
             const data = await collection.deleteOne(query);
@@ -132,7 +132,7 @@ export class DbUtilities {
             await dbClient.connect();
 
             const database = dbClient.db(process.env.DB_NAME);
-            const collection = database.collection(factory.getCollectionName());
+            const collection = database.collection(factory.CollectionName);
             const cursor = collection.find(query);
             cursor.limit(limit);
             cursor.skip(page * limit);
@@ -162,7 +162,7 @@ export class DbUtilities {
             await dbClient.connect();
 
             const database = dbClient.db(process.env.DB_NAME);
-            const collection = database.collection(factory.getCollectionName());
+            const collection = database.collection(factory.CollectionName);
             const cursor = collection.find(query, { projection: projection });
             let list: any[] = [];
             await cursor.forEach((d) => {

@@ -1,5 +1,5 @@
 export interface Factory<T> {
     make(json: any): T;
-    getCollectionName(): string;
+    CollectionName: string;
     getUrl(id?: string): string;
 }
