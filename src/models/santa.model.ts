@@ -6,7 +6,7 @@ import { Identifiable } from "./identifiable.model";
 
 export default class Santa implements Identifiable, Auditable {
     public _id: ObjectId;
-    public CharacterID: number;
+    public id: number;
     public CharacterName: string;
     public CorporationID: number;
     public CorporationName: string;
@@ -25,8 +25,8 @@ export default class Santa implements Identifiable, Auditable {
         if (!input._id) throw new Error("Santa requires an _id");
         else this._id = input._id;
 
-        if (!input.CharacterID) throw new Error("Santa requires a CharacterID");
-        else this.CharacterID = input.CharacterID;
+        if (!input.id) throw new Error("Santa requires an id");
+        else this.id = input.id;
 
         if (!input.CharacterName)
             throw new Error("Santa requires a CharacterName");
@@ -57,7 +57,7 @@ export default class Santa implements Identifiable, Auditable {
     }
 
     static make(
-        CharacterID: number,
+        id: number,
         CharacterName: string,
         CorporationID: number,
         CorporationName: string,
@@ -68,7 +68,7 @@ export default class Santa implements Identifiable, Auditable {
     ): Santa {
         return new Santa({
             _id: Utilities.newGuid(),
-            CharacterID,
+            id,
             CharacterName,
             CorporationID,
             CorporationName,
@@ -88,17 +88,9 @@ export default class Santa implements Identifiable, Auditable {
 
     static getFactory(): Factory<Santa> {
         return new (class implements Factory<Santa> {
-            make(json: any): Santa {
-                return new Santa(json);
-            }
-
-            getCollectionName(): string {
-                return "Santa";
-            }
-
-            getUrl(id?: string): string {
-                return Santa.getUrl();
-            }
+            make = (json: any) => new Santa(json);
+            CollectionName = "Santa";
+            getUrl = (ID?: string) => Santa.getUrl(ID);
         })();
     }
 

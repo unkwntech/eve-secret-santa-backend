@@ -18,19 +18,14 @@ export default class SantasController {
         //todo permissions & fields
         DB.Query(
             {
-                $and: [
-                    { CharacterID: parseInt(req.params.id) },
-                    { isDeleted: false },
-                ],
+                $and: [{ id: parseInt(req.params.id) }, { isDeleted: false }],
             },
             Santa.getFactory()
         )
             .then((data: Santa[]) => {
                 res.setHeader("Content-Range", `${data.length}/${data.length}`)
                     .status(200)
-                    .send(
-                        JSON.stringify({ id: data[0].CharacterID, ...data[0] })
-                    );
+                    .send(JSON.stringify(data[0]));
             })
             .catch((error) => {
                 console.error(error);

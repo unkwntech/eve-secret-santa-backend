@@ -182,7 +182,7 @@ export default class OAuthController {
             allianceName
         );
 
-        DB.Query({ CharacterID: santa.CharacterID }, Santa.getFactory()).then(
+        DB.Query({ CharacterID: santa.id }, Santa.getFactory()).then(
             async (res) => {
                 if (res.length < 1) {
                     //todo setup token for Santa's Secretary
@@ -203,7 +203,7 @@ export default class OAuthController {
                 } else {
                     res[0].updates.push({
                         timestamp: new Date(),
-                        actor: res[0].CharacterID.toString(),
+                        actor: res[0].id.toString(),
                         sourceIP: ((req.headers["x-forwarded-for"] as string) ||
                             req.socket.remoteAddress) as string,
                         action: "LOGIN",
