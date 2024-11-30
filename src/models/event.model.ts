@@ -89,7 +89,7 @@ export default class Event implements Identifiable, Auditable {
         return new (class implements Factory<Event> {
             make = (json: any) => new Event(json);
             CollectionName = "Event";
-            getUrl = (id?: string) => Event.getUrl();
+            getUrl = (id?: string) => Event.getUrl(id);
         })();
     }
 
