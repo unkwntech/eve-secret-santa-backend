@@ -3,6 +3,7 @@ import routable from "../decorators/routable.decorator";
 import { RecordUpdates } from "../models/auditable.model";
 import Event from "../models/event.model";
 import { JWTPayload } from "../models/jwtpayload.model";
+import Santa from "../models/santa.model";
 import { DbUtilities as DB } from "../utilities/db-utilities";
 import { Utilities } from "../utilities/utilities";
 
@@ -52,6 +53,7 @@ export default class EventsController {
             },
             Event.getFactory(),
             {
+                _id: 1,
                 id: 1,
                 OwnerID: 1,
                 EventName: 1,
@@ -61,8 +63,29 @@ export default class EventsController {
                 Participants: 1,
             }
         )
-            .then((data: Event[]) => {
-                res.status(200).send(JSON.stringify(data[0]));
+            .then(async (data: Event[]) => {
+                let event: { [key: string]: any } = {};
+                Object.assign(event, data[0]);
+
+                if (!event.isOpen) {
+                    let assignments = (
+                        await DB.Get(event._id, Event.getFactory())
+                    ).Assignments;
+
+                    let match = assignments.find(
+                        (a: { santa: number; recip: number }) =>
+                            a.santa === parseInt(jwt.sub)
+                    );
+                    if (match) {
+                        let recip = await DB.Query(
+                            { id: match.recip },
+                            Santa.getFactory()
+                        );
+                        event.MyMatch = recip[0].CharacterName;
+                    }
+                }
+
+                res.status(200).send(JSON.stringify(event));
             })
             .catch((error) => {
                 console.error(error);

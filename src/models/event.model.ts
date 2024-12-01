@@ -13,7 +13,7 @@ export default class Event implements Identifiable, Auditable {
     public SignupEndDate: Date;
     public DeliveryDeadline: Date;
     public Participants: string[] = [];
-    public Assignments: { santa: string; recip: string }[] = [];
+    public Assignments: { santa: number; recip: number }[] = [];
 
     public isPublished: boolean = false;
     public isOpen: boolean;
@@ -54,6 +54,7 @@ export default class Event implements Identifiable, Auditable {
         this.updates = input.updates;
         this.isDeleted = input.isDeleted;
         this.isPublished = input.isPublished ?? false;
+        this.Assignments = input.Assignments;
     }
 
     static make(
