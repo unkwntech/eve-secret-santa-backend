@@ -23,7 +23,7 @@ app.use(
 );
 
 //Set headers for all responses
-app.use(function (req, res, next) {
+app.use(function (req: Request, res: Response, next) {
     res.setHeader("Access-Control-Expose-Headers", "*");
     next();
 });
@@ -78,13 +78,13 @@ if (process.env.SSL_ENABLED === "true") {
     );
 }
 //Any thrown error will return a 500.
-app.use((err: any, req: any, res: any, next: any) => {
+app.use((err: any, req: Request, res: Response, next: any) => {
     console.error(err.stack);
     res.status(500).send("Something broke!");
 });
 
 //Any missing page returns a 404 and logs
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next) => {
     console.warn(`404 ${req.method} ${req.originalUrl}`);
     res.status(404).send("Sorry can't find that!");
 });
