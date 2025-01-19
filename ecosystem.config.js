@@ -2,7 +2,7 @@ module.exports = {
     apps: [
         {
             name: "SecretSanta-backend",
-            script: "build/main.js",
+            script: "dist/main.js",
             time: true,
             instances: 1,
             autorestart: true,
